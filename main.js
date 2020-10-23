@@ -1,14 +1,15 @@
 const container = document.querySelector('.image-container');
 const startButton = document.querySelector('.start-button');
+const cheatButton = document.querySelector('.cheat-button');
 const gameText = document.querySelector('.game-text');
 const playTime = document.querySelector('.play-time');
 const tileCount = 16;
 const dragged = {
 	el: null,
 	class: null,
-	index: null,
-	dropIndex: null
+	index: null
 };
+let tiles = [];
 let isPlaying = false;
 let timeInterval;
 let time = 0;
@@ -16,20 +17,14 @@ let time = 0;
 function setGame() {
 	container.innerHTML = '';
 	gameText.style.display = 'none';
-	time = 0;
 	tiles = createImageTiles();
 	tiles.forEach((tile) => container.appendChild(tile));
 	setTimeout(() => {
 		container.innerHTML = '';
-		appendTiles();
+		shuffle(tiles).forEach((tile) => container.appendChild(tile));
+		gameStart();
 	}, 5000);
 }
-
-function appendTiles() {
-	shuffle(tiles).forEach((tile) => container.appendChild(tile));
-	gameStart();
-}
-
 function gameStart() {
 	isPlaying = true;
 	timeInterval = setInterval(() => {
@@ -37,13 +32,30 @@ function gameStart() {
 		playTime.innerText = time;
 	}, 1000);
 }
-
-function checkStatus() {
-	const currList = container.children;
-	const unMatchedList = [];
-	for (const [ key, value ] of Object.entries(currList)) {
-		key !== value.getAttribute('data-index') ? unMatchedList.push(key) : null;
+function createImageTiles() {
+	const tempArray = [];
+	// for(var i=0; i<tileCount; i++)
+	Array(tileCount).fill().forEach((_, i) => {
+		const li = document.createElement('li');
+		li.setAttribute('data-index', i);
+		li.setAttribute('draggable', 'true');
+		li.classList.add(`list${i}`);
+		tempArray.push(li);
+	});
+	return tempArray;
+}
+function shuffle(array) {
+	let index = array.length - 1;
+	while (index > 0) {
+		const randomIndex = Math.floor(Math.random() * (index + 1));
+		[ array[index], array[randomIndex] ] = [ array[randomIndex], array[index] ];
+		index--;
 	}
+	return array;
+}
+function checkStatus() {
+	const currentList = [ ...container.children ];
+	const unMatchedList = currentList.filter((child, index) => Number(child.getAttribute('data-index')) !== index);
 	if (unMatchedList.length === 0) {
 		gameText.style.display = 'block';
 		isPlaying = false;
@@ -51,48 +63,22 @@ function checkStatus() {
 	}
 }
 
-function createImageTiles() {
-	const tempArray = [];
-	Array(tileCount).fill().forEach((_, n) => {
-		const li = document.createElement('li');
-		li.setAttribute('data-index', n);
-		li.setAttribute('draggable', 'true');
-		li.classList.add(`list${n}`);
-		tempArray.push(li);
-	});
-	return tempArray;
-}
-
-function shuffle(array) {
-	let index = array.length - 1;
-	while (index > 0) {
-		let randomIndex = Math.floor(Math.random() * (index + 1));
-		[ array[index], array[randomIndex] ] = [ array[randomIndex], array[index] ];
-		index--;
-	}
-	return array;
-}
-
-// event listeners
-startButton.addEventListener('click', () => {
-	setGame();
-});
-
-container.addEventListener('dragstart', ({ target }) => {
+// events
+container.addEventListener('dragstart', (event) => {
 	if (!isPlaying) return;
-	// console.log({ target });
-	dragged.el = target;
-	dragged.class = target.className;
-	dragged.index = [ ...target.parentNode.children ].indexOf(target);
+	const obj = event.target;
+	dragged.el = obj;
+	dragged.class = obj.className;
+	dragged.index = [ ...obj.parentNode.children ].indexOf(obj);
 });
-
 container.addEventListener('dragover', (event) => {
 	event.preventDefault();
 });
-
 container.addEventListener('drop', (event) => {
 	if (!isPlaying) return;
-	if (event.target.className !== dragged.class) {
+	const obj = event.target;
+
+	if (obj.className !== dragged.class) {
 		let originPlace;
 		let isLast = false;
 		if (dragged.el.nextSibling) {
@@ -101,9 +87,20 @@ container.addEventListener('drop', (event) => {
 			originPlace = dragged.el.previousSibling;
 			isLast = true;
 		}
-		dragged.dropIndex = [ ...event.target.parentNode.children ].indexOf(event.target);
-		dragged.index > dragged.dropIndex ? event.target.before(dragged.el) : event.target.after(dragged.el);
-		isLast ? originPlace.after(event.target) : originPlace.before(event.target);
+		const droppedIndex = [ ...obj.parentNode.children ].indexOf(obj);
+		dragged.index > droppedIndex ? obj.before(dragged.el) : obj.after(dragged.el);
+		isLast ? originPlace.after(obj) : originPlace.before(obj);
 	}
 	checkStatus();
+});
+
+startButton.addEventListener('click', () => {
+	setGame();
+});
+
+cheatButton.addEventListener('click', () => {
+	const currentList = [ ...container.children ];
+	currentList.forEach((li) => {
+		li.innerText = li.dataset.index;
+	});
 });
