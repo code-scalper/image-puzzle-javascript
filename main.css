@@ -1,0 +1,100 @@
+* {
+	margin: 0;
+	padding: 0;
+}
+.wrap-all {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	flex-direction: column;
+	position: relative;
+}
+ul {
+	margin-top: 1rem;
+	list-style: none;
+	border: 2px solid #3b5998;
+	width: 400px;
+	height: 400px;
+	display: grid;
+	grid-template-columns: repeat(4, 1fr);
+}
+li {
+	width: 100px;
+	height: 100px;
+	overflow: hidden;
+	background: url("https://placeimg.com/400/400/any");
+}
+.play-time {
+	font-size: 36px;
+	margin-top: 2rem;
+	color: #3b5998;
+}
+.start-button {
+	background: #3b5998;
+	color: #fff;
+	padding: 1rem 2rem;
+	margin-top: 1rem;
+}
+.game-text {
+	position: absolute;
+	font-size: 45px;
+	color: #67c23a;
+	display: none;
+	text-shadow: 1px 1px rgba(0, 0, 0, 0.6);
+}
+.list0 {
+}
+.list1 {
+	background-position-x: -100px;
+}
+.list2 {
+	background-position-x: -200px;
+}
+.list3 {
+	background-position-x: -300px;
+}
+.list4 {
+	background-position-y: -100px;
+}
+.list5 {
+	background-position-y: -100px;
+	background-position-x: -100px;
+}
+.list6 {
+	background-position-y: -100px;
+	background-position-x: -200px;
+}
+.list7 {
+	background-position-y: -100px;
+	background-position-x: -300px;
+}
+.list8 {
+	background-position-y: -200px;
+}
+.list9 {
+	background-position-y: -200px;
+	background-position-x: -100px;
+}
+.list10 {
+	background-position-y: -200px;
+	background-position-x: -200px;
+}
+.list11 {
+	background-position-y: -200px;
+	background-position-x: -300px;
+}
+.list12 {
+	background-position-y: -300px;
+}
+.list13 {
+	background-position-y: -300px;
+	background-position-x: -100px;
+}
+.list14 {
+	background-position-y: -300px;
+	background-position-x: -200px;
+}
+.list15 {
+	background-position-y: -300px;
+	background-position-x: -300px;
+}
