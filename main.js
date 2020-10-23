@@ -35,7 +35,6 @@ function gameStart() {
 	timeInterval = setInterval(() => {
 		time++;
 		playTime.innerText = time;
-		clearInterval(timeInterval);
 	}, 1000);
 }
 
@@ -48,6 +47,7 @@ function checkStatus() {
 	if (unMatchedList.length === 0) {
 		gameText.style.display = 'block';
 		isPlaying = false;
+		clearInterval(timeInterval);
 	}
 }
 
